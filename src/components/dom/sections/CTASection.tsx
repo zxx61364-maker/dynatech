@@ -1,35 +1,25 @@
 'use client';
 
+import { useScrollStore } from '@/hooks/useScrollStore';
 import { useDomVisibility } from '@/hooks/useDomVisibility';
 
 export function CTASection() {
-  const visible = useDomVisibility('cta');
+  const currentSection = useScrollStore((s) => s.currentSection);
+  const { visible, opacity } = useDomVisibility('cta');
+
+  if (currentSection !== 'cta' && currentSection !== 'client-wall' && currentSection !== 'finale') return null;
 
   return (
     <>
-      <div className="cta-dom" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.5s' }}>
-        <div className="cta-card">
-          <h2>READY TO LEVERAGE YOUR SYNERGIES?</h2>
-          <p style={{ fontFamily: 'var(--font-display)', fontSize: '14px', color: '#555', margin: '0 0 8px 0' }}>
-            Our business transformation specialists are standing by.
-          </p>
-          <p className="fax-number">1-800-DYNATECH</p>
-          <p className="checkbox-line">
-            ☐ YES! Send me more information about Dynatech Solutions
-          </p>
-          <p className="fine-print">
-            OPERATORS AVAILABLE 9–5 EST MONDAY THROUGH FRIDAY
-          </p>
-          <a href="mailto:info@dynatech.example.com" className="cta-button">
-            REQUEST CONSULTATION ▸
-          </a>
-        </div>
+      <div className="cta-whisper" style={{ opacity: visible ? opacity : 0 }}>
+        <span className="cta-whisper-line" />
+        <p className="cta-whisper-text">The future converges here</p>
+        <span className="cta-whisper-line" />
       </div>
 
       <section className="a11y-sr" aria-label="Contact Dynatech">
-        <h2>Ready to Leverage Your Synergies?</h2>
-        <p>Call 1-800-DYNATECH. Operators standing by.</p>
-        <a href="mailto:info@dynatech.example.com">Email Dynatech Corporation</a>
+        <h2>Contact Dynatech Corporation</h2>
+        <p>Call 1-800-DYNATECH or email info@dynatech.example.com</p>
       </section>
     </>
   );

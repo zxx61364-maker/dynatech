@@ -34,6 +34,7 @@ export interface ScrollState {
   globalProgress: number;
   globalVelocity: number;
   currentSection: SectionId;
+  previousSection: SectionId;
   sectionProgress: Record<SectionId, number>;
   isLocked: boolean;
 }

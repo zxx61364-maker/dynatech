@@ -35,32 +35,101 @@ export function ScrollContainer() {
       </nav>
 
       <div className="scroll-content">
-        <div id="hero-section" className="sr-section-marker"
-          style={{ position: 'absolute', top: '0svh', height: 'calc(100svh * 1.2)', width: '100%', left: 0 }}>
+        {/* ── HERO (0 – 0.15) ── */}
+        <div
+          data-section="hero"
+          style={{
+            position: 'absolute',
+            top: '0svh',
+            height: 'calc(100svh * 1.5)',
+            width: '100%',
+            left: 0,
+          }}
+        >
           <HeroSection />
         </div>
-        <div id="filmstrip-section" className="sr-section-marker"
-          style={{ position: 'absolute', top: 'calc(100svh * 1.5)', height: 'calc(100svh * 1.2)', width: '100%', left: 0 }}>
+
+        {/* ── FILMSTRIP (0.15 – 0.32) ── */}
+        <div
+          data-section="filmstrip"
+          style={{
+            position: 'absolute',
+            top: 'calc(100svh * 1.8)',
+            height: 'calc(100svh * 1.5)',
+            width: '100%',
+            left: 0,
+          }}
+        >
           <FilmstripSection />
         </div>
-        <div id="office-section" className="sr-section-marker"
-          style={{ position: 'absolute', top: 'calc(100svh * 3.0)', height: 'calc(100svh * 1.2)', width: '100%', left: 0 }}>
+
+        {/* ── OFFICE (0.32 – 0.48) ── */}
+        <div
+          data-section="office"
+          style={{
+            position: 'absolute',
+            top: 'calc(100svh * 3.5)',
+            height: 'calc(100svh * 1.5)',
+            width: '100%',
+            left: 0,
+          }}
+        >
           <OfficeSection />
         </div>
-        <div id="paper-section" className="sr-section-marker"
-          style={{ position: 'absolute', top: 'calc(100svh * 4.5)', height: 'calc(100svh * 1.3)', width: '100%', left: 0 }}>
+
+        {/* ── PAPER (0.48 – 0.65) ── */}
+        <div
+          data-section="paper"
+          style={{
+            position: 'absolute',
+            top: 'calc(100svh * 5.2)',
+            height: 'calc(100svh * 1.6)',
+            width: '100%',
+            left: 0,
+          }}
+        >
           <PaperSection />
         </div>
-        <div id="client-wall-section" className="sr-section-marker"
-          style={{ position: 'absolute', top: 'calc(100svh * 6.0)', height: 'calc(100svh * 1.0)', width: '100%', left: 0 }}>
+
+        {/* ── CLIENT WALL (0.65 – 0.78) ── */}
+        <div
+          data-section="client-wall"
+          style={{
+            position: 'absolute',
+            top: 'calc(100svh * 7.0)',
+            height: 'calc(100svh * 1.2)',
+            width: '100%',
+            left: 0,
+          }}
+        >
           <ClientSection />
         </div>
-        <div id="cta-section" className="sr-section-marker"
-          style={{ position: 'absolute', top: 'calc(100svh * 7.1)', height: 'calc(100svh * 1.1)', width: '100%', left: 0 }}>
+
+        {/* ── CTA (0.78 – 0.92) ── */}
+        <div
+          data-section="cta"
+          style={{
+            position: 'absolute',
+            top: 'calc(100svh * 8.3)',
+            height: 'calc(100svh * 1.3)',
+            width: '100%',
+            left: 0,
+          }}
+        >
           <CTASection />
         </div>
-        <div id="finale-section" className="sr-section-marker"
-          style={{ position: 'absolute', top: 'calc(100svh * 7.9)', height: 'calc(100svh * 0.9)', width: '100%', left: 0 }}>
+
+        {/* ── FINALE (0.92 – 1.0) ── */}
+        <div
+          data-section="finale"
+          style={{
+            position: 'absolute',
+            top: 'calc(100svh * 9.5)',
+            height: 'calc(100svh * 1.0)',
+            width: '100%',
+            left: 0,
+          }}
+        >
           <FinaleSection />
         </div>
       </div>

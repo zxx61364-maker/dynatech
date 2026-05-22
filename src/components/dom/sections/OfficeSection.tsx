@@ -1,15 +1,33 @@
 'use client';
 
+import { useScrollStore } from '@/hooks/useScrollStore';
 import { useDomVisibility } from '@/hooks/useDomVisibility';
 
 export function OfficeSection() {
-  const visible = useDomVisibility('office');
+  const currentSection = useScrollStore((s) => s.currentSection);
+  const { visible, opacity } = useDomVisibility('office');
+
+  if (currentSection !== 'office' && currentSection !== 'filmstrip' && currentSection !== 'paper') return null;
 
   return (
     <>
-      <div className="office-dom" style={{ opacity: visible ? 1 : 0.08, transition: 'opacity 0.5s' }}>
+      <div className="office-overlay" style={{ opacity: visible ? opacity : 0 }}>
         <h2>ABOUT DYNATECH</h2>
-        <p>A CORPORATE PHILOSOPHY FILM</p>
+        <p className="office-subtitle">A Corporate Philosophy Film</p>
+        <div className="office-stats">
+          <div className="office-stat">
+            <div className="office-stat-value">1982</div>
+            <div className="office-stat-label">Established</div>
+          </div>
+          <div className="office-stat">
+            <div className="office-stat-value">40+</div>
+            <div className="office-stat-label">Years Combined XP</div>
+          </div>
+          <div className="office-stat">
+            <div className="office-stat-value">12pt</div>
+            <div className="office-stat-label">Excellence Matrix</div>
+          </div>
+        </div>
       </div>
 
       <section className="a11y-sr" aria-label="About Dynatech">

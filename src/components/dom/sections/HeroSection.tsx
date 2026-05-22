@@ -1,21 +1,34 @@
 'use client';
 
+import { useScrollStore } from '@/hooks/useScrollStore';
 import { useDomVisibility } from '@/hooks/useDomVisibility';
 
 export function HeroSection() {
-  const visible = useDomVisibility('hero');
+  const currentSection = useScrollStore((s) => s.currentSection);
+  const { visible, opacity } = useDomVisibility('hero');
+
+  // Only render overlay when hero is active or about to be
+  if (currentSection !== 'hero' && currentSection !== 'filmstrip') return null;
 
   return (
     <>
-      <div className="hero-dom" style={{ opacity: visible ? 1 : 0.08, transition: 'opacity 0.5s' }}>
-        <h1>
-          BUSINESS SOLUTIONS
-          <br />
-          FOR THE MODERN
-          <br />
-          ENTERPRISE
-        </h1>
-        <p>▼ INSERT DISK TO CONTINUE</p>
+      <div className="hero-overlay" style={{ opacity: visible ? opacity : 0 }}>
+        <div className="hero-text-block">
+          <h1 className="hero-masthead">
+            BUSINESS
+            <br />
+            SOLUTIONS
+            <br />
+            FOR THE
+            <br />
+            MODERN
+            <br />
+            ENTERPRISE
+          </h1>
+          <p className="hero-subtitle">Dynatech Corporation — Est. 1982</p>
+          <p className="hero-scroll-hint">▼ Insert Disk to Continue</p>
+        </div>
+        <div className="hero-spacer" />
       </div>
 
       <section className="a11y-sr" aria-label="Hero">

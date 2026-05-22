@@ -46,14 +46,19 @@ export const useScrollStore = create<ScrollStore>((set) => ({
   globalProgress: 0,
   globalVelocity: 0,
   currentSection: 'hero',
+  previousSection: 'hero',
   sectionProgress: initialSectionProgress,
   isLocked: false,
 
   setGlobalProgress: (v) =>
-    set({
-      globalProgress: v,
-      currentSection: computeCurrentSection(v),
-      sectionProgress: computeAllSectionProgress(v),
+    set((state) => {
+      const nextSection = computeCurrentSection(v);
+      return {
+        globalProgress: v,
+        previousSection: state.currentSection !== nextSection ? state.currentSection : state.previousSection,
+        currentSection: nextSection,
+        sectionProgress: computeAllSectionProgress(v),
+      };
     }),
 
   setGlobalVelocity: (v) => set({ globalVelocity: v }),

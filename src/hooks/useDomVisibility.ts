@@ -1,36 +1,42 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useScrollStore } from '@/hooks/useScrollStore';
 import type { SectionId } from '@/types';
 import { SECTION_CONFIGS } from '@/types';
 
+function computeAlpha(section: SectionId, globalProgress: number): { visible: boolean; opacity: number } {
+  const cfg = SECTION_CONFIGS.find((s) => s.id === section);
+  if (!cfg) return { visible: false, opacity: 0 };
+
+  const { start, end } = cfg;
+  const range = end - start;
+  if (range <= 0) return { visible: false, opacity: 0 };
+
+  const sectionProgress = Math.max(0, Math.min(1, (globalProgress - start) / range));
+  const isFirst = start === 0;
+  const isLast = end >= 1;
+
+  let alpha = 0;
+  if (isFirst) {
+    if (sectionProgress < 0.08) alpha = 1;
+    else if (sectionProgress < 0.95) alpha = 1 - (sectionProgress - 0.08) / 0.87;
+    else alpha = 0;
+  } else if (isLast) {
+    if (sectionProgress < 0.02) alpha = 0;
+    else if (sectionProgress < 0.12) alpha = (sectionProgress - 0.02) / 0.10;
+    else alpha = 1;
+  } else {
+    if (sectionProgress < 0.02) alpha = 0;
+    else if (sectionProgress < 0.10) alpha = (sectionProgress - 0.02) / 0.08;
+    else if (sectionProgress < 0.88) alpha = 1;
+    else if (sectionProgress < 0.96) alpha = 1 - (sectionProgress - 0.88) / 0.08;
+    else alpha = 0;
+  }
+
+  return { visible: alpha > 0.01, opacity: alpha };
+}
+
 export function useDomVisibility(section: SectionId) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const cfg = SECTION_CONFIGS.find((s) => s.id === section);
-    if (!cfg) return;
-
-    const container = document.getElementById('scroll-container');
-    if (!container) return;
-
-    const check = () => {
-      const maxScroll = container.scrollHeight - window.innerHeight;
-      if (maxScroll <= 0) return;
-      const globalProgress = container.scrollTop / maxScroll;
-      const start = cfg.start;
-      const end = cfg.end;
-      const range = end - start;
-      const sectionProgress = Math.max(0, Math.min(1, (globalProgress - start) / range));
-      // First section: visible from 0. Rest: visible from 0.05 to 0.95
-      const isFirst = start === 0;
-      setVisible(isFirst ? sectionProgress < 0.95 : sectionProgress > 0.05 && sectionProgress < 0.95);
-    };
-
-    check();
-    container.addEventListener('scroll', check, { passive: true });
-    return () => container.removeEventListener('scroll', check);
-  }, [section]);
-
-  return visible;
+  const globalProgress = useScrollStore((s) => s.globalProgress);
+  return computeAlpha(section, globalProgress);
 }

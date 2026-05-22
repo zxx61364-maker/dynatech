@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { ScrollContainer } from '@/components/dom/ScrollContainer';
 import { BootOverlay } from '@/components/canvas/scenes/BootOverlay';
+import { TransitionOverlay } from '@/components/dom/TransitionOverlay';
 
 const CanvasRoot = dynamic(
   () => import('@/components/canvas/CanvasRoot').then((m) => ({ default: m.CanvasRoot })),
@@ -20,6 +21,9 @@ export default function Home() {
 
       {/* DOM scroll layer — z-50, fixed */}
       <ScrollContainer />
+
+      {/* Chapter transition overlay — z-46 */}
+      <TransitionOverlay />
     </>
   );
 }

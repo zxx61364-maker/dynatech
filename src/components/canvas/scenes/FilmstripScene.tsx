@@ -18,89 +18,128 @@ function FilmFrame({
   project: (typeof PROJECTS)[0];
   progress: number;
 }) {
+  const frameRef = useRef<THREE.Group>(null);
   const t = index / (total - 1);
-  const angle = t * Math.PI * 0.55 - Math.PI * 0.275;
-  const radius = 5.5;
+  const angle = t * Math.PI * 0.5 - Math.PI * 0.25;
+  const radius = 6.0;
   const x = Math.sin(angle) * radius;
-  const z = Math.cos(angle) * radius - 3;
-  const y = (t - 0.5) * 2.5;
+  const z = Math.cos(angle) * radius - 3.5;
+  const y = (t - 0.5) * 2.8;
   const rotY = -angle;
 
+  // Gentle sway
+  useFrame((_, delta) => {
+    if (frameRef.current) {
+      frameRef.current.position.y = y + Math.sin(Date.now() * 0.001 + index) * 0.06;
+    }
+  });
+
   return (
-    <group position={[x, y, z]} rotation={[0, rotY, 0]}>
-      {/* Film perforation border — top strip */}
-      <mesh position={[0, 0.68, 0]}>
-        <boxGeometry args={[2.0, 0.08, 0.015]} />
-        <meshStandardMaterial color="#111111" roughness={0.5} metalness={0.3} />
+    <group ref={frameRef} position={[x, y, z]} rotation={[0, rotY, 0]}>
+      {/* === FILM STRIP — TOP PERFORATION BAR === */}
+      <mesh position={[0, 0.72, 0]}>
+        <boxGeometry args={[2.1, 0.09, 0.02]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.45} metalness={0.25} />
       </mesh>
       {/* Sprocket holes — top */}
-      {Array.from({ length: 8 }).map((_, i) => (
-        <mesh key={`st-${i}`} position={[-0.85 + i * 0.24, 0.72, 0.005]}>
-          <boxGeometry args={[0.1, 0.06, 0.02]} />
-          <meshStandardMaterial color="#000" roughness={0.4} />
+      {Array.from({ length: 9 }).map((_, i) => (
+        <mesh key={`st-${i}`} position={[-0.9 + i * 0.22, 0.76, 0.01]}>
+          <boxGeometry args={[0.1, 0.06, 0.025]} />
+          <meshStandardMaterial color="#000" roughness={0.3} />
         </mesh>
       ))}
 
-      {/* Film perforation border — bottom strip */}
-      <mesh position={[0, -0.68, 0]}>
-        <boxGeometry args={[2.0, 0.08, 0.015]} />
-        <meshStandardMaterial color="#111111" roughness={0.5} metalness={0.3} />
+      {/* === FILM STRIP — BOTTOM PERFORATION BAR === */}
+      <mesh position={[0, -0.72, 0]}>
+        <boxGeometry args={[2.1, 0.09, 0.02]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.45} metalness={0.25} />
       </mesh>
       {/* Sprocket holes — bottom */}
-      {Array.from({ length: 8 }).map((_, i) => (
-        <mesh key={`sb-${i}`} position={[-0.85 + i * 0.24, -0.72, 0.005]}>
-          <boxGeometry args={[0.1, 0.06, 0.02]} />
-          <meshStandardMaterial color="#000" roughness={0.4} />
+      {Array.from({ length: 9 }).map((_, i) => (
+        <mesh key={`sb-${i}`} position={[-0.9 + i * 0.22, -0.76, 0.01]}>
+          <boxGeometry args={[0.1, 0.06, 0.025]} />
+          <meshStandardMaterial color="#000" roughness={0.3} />
         </mesh>
       ))}
 
-      {/* Film frame border */}
-      <mesh position={[0, 0, 0.015]}>
-        <boxGeometry args={[1.9, 1.1, 0.01]} />
-        <meshStandardMaterial color="#181818" roughness={0.5} metalness={0.25} />
+      {/* === FRAME BORDER (film frame edge) === */}
+      <mesh position={[0, 0, 0.02]}>
+        <boxGeometry args={[2.0, 1.2, 0.015]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.4} metalness={0.2} />
       </mesh>
 
-      {/* Frame content — gradient plane */}
-      <mesh position={[0, 0, 0.025]}>
-        <planeGeometry args={[1.7, 0.95]} />
+      {/* === FRAME CONTENT — gradient with design elements === */}
+      {/* Background gradient plane */}
+      <mesh position={[0, 0, 0.035]}>
+        <planeGeometry args={[1.8, 1.05]} />
         <meshBasicMaterial color={project.color} />
       </mesh>
 
-      {/* Frame number */}
-      <Text
-        position={[0.6, 0.55, 0.03]}
-        fontSize={0.06}
-        color="#666"
-        anchorX="right"
-        anchorY="top"
-       
-      >
-        {String(index + 1).padStart(2, '0')}
-      </Text>
+      {/* Overlay gradient strip */}
+      <mesh position={[0, 0.2, 0.04]}>
+        <planeGeometry args={[1.8, 0.3]} />
+        <meshBasicMaterial color={
+          new THREE.Color(project.color).multiplyScalar(1.3).getStyle()
+        } transparent opacity={0.5} />
+      </mesh>
 
-      {/* Project title below frame */}
+      {/* Decorative rule line */}
+      <mesh position={[0, 0.04, 0.045]}>
+        <boxGeometry args={[1.6, 0.004, 0.002]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.2} />
+      </mesh>
+      <mesh position={[0, -0.04, 0.045]}>
+        <boxGeometry args={[1.6, 0.004, 0.002]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
+      </mesh>
+
+      {/* Project title on frame */}
       <Text
-        position={[0, -0.85, 0.03]}
-        fontSize={0.08}
+        position={[0, -0.3, 0.05]}
+        fontSize={0.09}
         color={COLORS.TEXT_WARM_WHITE}
         anchorX="center"
-        anchorY="top"
+        anchorY="middle"
         letterSpacing={0.04}
-       
+        font={undefined}
       >
         {project.title.toUpperCase()}
       </Text>
       <Text
-        position={[0, -0.95, 0.03]}
-        fontSize={0.055}
-        color="rgba(248,244,230,0.5)"
+        position={[0, -0.42, 0.05]}
+        fontSize={0.06}
+        color="#f8f4e6"
         anchorX="center"
-        anchorY="top"
+        anchorY="middle"
         letterSpacing={0.03}
-       
+        fillOpacity={0.4}
+        font={undefined}
       >
         {project.subtitle}
       </Text>
+
+      {/* Frame number */}
+      <Text
+        position={[0.6, 0.44, 0.05]}
+        fontSize={0.07}
+        color="#ffffff"
+        anchorX="right"
+        anchorY="top"
+        fillOpacity={0.3}
+        font={undefined}
+      >
+        {String(index + 1).padStart(2, '0')}
+      </Text>
+
+      {/* Corner marks */}
+      <mesh position={[-0.82, 0.44, 0.04]}>
+        <boxGeometry args={[0.12, 0.015, 0.002]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
+      </mesh>
+      <mesh position={[-0.82, 0.44, 0.04]}>
+        <boxGeometry args={[0.015, 0.12, 0.002]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
+      </mesh>
     </group>
   );
 }
@@ -109,10 +148,10 @@ export function FilmstripScene() {
   const { progress } = useSceneProgress('filmstrip');
   const { camera } = useThree();
 
-  const startPos = useMemo(() => new THREE.Vector3(0, 0.8, 7), []);
-  const endPos = useMemo(() => new THREE.Vector3(0, -0.3, 2.5), []);
-  const lookStart = useMemo(() => new THREE.Vector3(0, 0.3, -3), []);
-  const lookEnd = useMemo(() => new THREE.Vector3(0, -0.3, -2), []);
+  const startPos = useMemo(() => new THREE.Vector3(0, 1.2, 8), []);
+  const endPos = useMemo(() => new THREE.Vector3(0, -0.1, 3.0), []);
+  const lookStart = useMemo(() => new THREE.Vector3(0, 0.2, -3.5), []);
+  const lookEnd = useMemo(() => new THREE.Vector3(0, -0.2, -3.5), []);
 
   useFrame(() => {
     const t = progress;
@@ -123,26 +162,45 @@ export function FilmstripScene() {
 
   return (
     <group>
-      {/* Darkroom lighting */}
-      <ambientLight intensity={0.2} color={COLORS.FILM_SAFELIGHT} />
-      {/* Safelight */}
-      <pointLight position={[3, 1.5, 4]} intensity={4} color="#551100" distance={14} />
-      <pointLight position={[-3, -1, 5]} intensity={2.5} color="#331100" distance={12} />
-      {/* Projector light beam hint */}
-      <spotLight position={[0, 0, 5]} angle={0.4} penumbra={0.6} intensity={6} color="#ffe8d0" distance={15} />
+      {/* Darkroom red safelight ambiance */}
+      <ambientLight intensity={0.18} color={COLORS.FILM_SAFELIGHT} />
 
-      <fog attach="fog" args={['#0a0505', 2, 15]} />
+      {/* Main safelight from upper left */}
+      <pointLight position={[4, 2.5, 5]} intensity={5} color="#551100" distance={16} />
+      {/* Secondary safelight */}
+      <pointLight position={[-4, -1, 5]} intensity={3} color="#331100" distance={14} />
 
-      {/* Film frames */}
+      {/* Projector beam */}
+      <spotLight
+        position={[0, 1, 6]}
+        angle={0.45}
+        penumbra={0.55}
+        intensity={7}
+        color="#ffe0c8"
+        distance={16}
+      />
+
+      <fog attach="fog" args={['#0a0505', 1.5, 16]} />
+
+      {/* Film frames — curved carousel */}
       {PROJECTS.map((project, i) => (
-        <FilmFrame key={project.id} index={i} total={PROJECTS.length} project={project} progress={progress} />
+        <FilmFrame
+          key={project.id}
+          index={i}
+          total={PROJECTS.length}
+          project={project}
+          progress={progress}
+        />
       ))}
 
-      {/* Subtle darkroom floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
-        <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#0a0808" roughness={1} transparent opacity={0.5} depthWrite={false} />
+      {/* Darkroom floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.5, 0]}>
+        <planeGeometry args={[24, 24]} />
+        <meshStandardMaterial color="#0a0606" roughness={1} transparent opacity={0.4} depthWrite={false} />
       </mesh>
+
+
+
     </group>
   );
 }

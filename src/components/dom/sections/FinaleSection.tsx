@@ -1,16 +1,29 @@
 'use client';
 
+import { useMemo } from 'react';
+import { useScrollStore } from '@/hooks/useScrollStore';
 import { useDomVisibility } from '@/hooks/useDomVisibility';
 
 export function FinaleSection() {
-  const visible = useDomVisibility('finale');
+  const currentSection = useScrollStore((s) => s.currentSection);
+  const { visible } = useDomVisibility('finale');
+  const finaleProgress = useScrollStore((s) => s.sectionProgress['finale']);
+
+  // Delay appearance: only show DOM title after CTA elements have fully retreated.
+  // The dark-collapse CSS transition handles the bridge.
+  const delayedOpacity = useMemo(() => {
+    if (finaleProgress < 0.06) return 0;
+    if (finaleProgress < 0.16) return (finaleProgress - 0.06) / 0.10;
+    return 1;
+  }, [finaleProgress]);
+
+  if (currentSection !== 'finale' && currentSection !== 'cta') return null;
 
   return (
     <>
-      <div className="finale-dom" style={{ opacity: visible ? 1 : 0.05, transition: 'opacity 0.8s' }}>
-        <h2>DYNATECH CORPORATION</h2>
-        <p className="est">EST. 1982</p>
-        <p className="tagline">THE FUTURE OF BUSINESS IS BUSINESS</p>
+      <div className="finale-overlay" style={{ opacity: visible ? delayedOpacity : 0 }}>
+        <h2 className="finale-title">DYNATECH</h2>
+        <div className="finale-rule" />
       </div>
 
       <section className="a11y-sr" aria-label="Dynatech Corporation">
