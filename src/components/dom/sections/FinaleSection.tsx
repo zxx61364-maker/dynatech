@@ -17,7 +17,7 @@ export function FinaleSection() {
     return 1;
   }, [finaleProgress]);
 
-  if (currentSection !== 'finale' && currentSection !== 'cta') return null;
+  if (currentSection !== 'finale') return null;
 
   return (
     <>

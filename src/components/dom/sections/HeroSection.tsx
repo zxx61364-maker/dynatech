@@ -7,8 +7,7 @@ export function HeroSection() {
   const currentSection = useScrollStore((s) => s.currentSection);
   const { visible, opacity } = useDomVisibility('hero');
 
-  // Only render overlay when hero is active or about to be
-  if (currentSection !== 'hero' && currentSection !== 'filmstrip') return null;
+  if (currentSection !== 'hero') return null;
 
   return (
     <>

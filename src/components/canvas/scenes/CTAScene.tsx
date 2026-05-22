@@ -48,36 +48,39 @@ function GoldenFrameRing({ progress }: { progress: number }) {
     if (!groupRef.current) return;
     const retreat = progress > 0.85 ? (progress - 0.85) / 0.15 : 0;
     const t = Math.min(progress, 0.85);
-    const scale = 1.8 - t * 1.4;
-    groupRef.current.scale.setScalar(Math.max(0.25, scale) * (1 - retreat * 0.7));
+    const scale = 2.0 - t * 1.6;
+    groupRef.current.scale.setScalar(Math.max(0.2, scale) * (1 - retreat * 0.7));
     groupRef.current.position.z = -0.3 + t * 0.1;
   });
 
   return (
     <group ref={groupRef}>
+      {/* Outer dominant ring */}
       <mesh rotation={[0.2, 0, 0]}>
-        <torusGeometry args={[1.6, 0.012, 16, 80]} />
+        <torusGeometry args={[1.6, 0.014, 16, 80]} />
         <meshStandardMaterial
           color={COLORS.GOLDEN_ACCENT}
-          roughness={0.1}
+          roughness={0.08}
+          metalness={0.97}
+          emissive="#181000"
+          emissiveIntensity={0.15}
+        />
+      </mesh>
+      {/* Inner subtle ring — thinner, secondary */}
+      <mesh rotation={[-0.15, 0, Math.PI / 3]}>
+        <torusGeometry args={[1.15, 0.005, 12, 60]} />
+        <meshStandardMaterial
+          color="#d0c040"
+          roughness={0.08}
           metalness={0.95}
           transparent
-          opacity={1}
+          opacity={0.7}
         />
       </mesh>
-      <mesh rotation={[-0.15, 0, Math.PI / 3]}>
-        <torusGeometry args={[1.1, 0.008, 12, 60]} />
-        <meshStandardMaterial
-          color="#e8d040"
-          roughness={0.05}
-          metalness={1.0}
-          transparent
-          opacity={1}
-        />
-      </mesh>
+      {/* Accent ring — very thin, faint */}
       <mesh rotation={[0.3, Math.PI / 4, 0]}>
-        <torusGeometry args={[1.35, 0.004, 8, 60]} />
-        <meshBasicMaterial color={COLORS.GOLDEN_ACCENT} transparent opacity={0.3} depthWrite={false} />
+        <torusGeometry args={[1.38, 0.003, 8, 60]} />
+        <meshBasicMaterial color={COLORS.GOLDEN_ACCENT} transparent opacity={0.2} depthWrite={false} />
       </mesh>
     </group>
   );
@@ -114,12 +117,12 @@ export function CTAScene() {
       {/* Ambient dims during retreat */}
       <ambientLight intensity={0.06 * activePhase} color="#080402" />
 
-      {/* Central spotlight — narrows, then dims in retreat */}
+      {/* Central spotlight — starts wider, narrows dramatically */}
       <spotLight
         position={[0, 3.5, 1.5]}
-        angle={0.55 - Math.min(progress, 0.85) * 0.35}
-        penumbra={0.3 + Math.min(progress, 0.85) * 0.5}
-        intensity={(3 + Math.min(progress, 0.85) * 8) * activePhase}
+        angle={0.7 - Math.min(progress, 0.85) * 0.5}
+        penumbra={0.2 + Math.min(progress, 0.85) * 0.7}
+        intensity={(2.5 + Math.min(progress, 0.85) * 10) * activePhase}
         color="#fff8e0"
         distance={10}
       />
@@ -138,6 +141,18 @@ export function CTAScene() {
       <mesh position={[0, -2.3, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[16, 14]} />
         <meshStandardMaterial color="#040201" roughness={1} />
+      </mesh>
+
+      {/* === CONVERGENCE CORE — bright focal point === */}
+      <mesh position={[0, 0.0, -0.15]}>
+        <sphereGeometry args={[0.06 + Math.min(progress, 0.85) * 0.1, 16, 16]} />
+        <meshStandardMaterial
+          color="#ffe8c0"
+          roughness={0.05}
+          metalness={1.0}
+          emissive="#ffe8c0"
+          emissiveIntensity={0.3 + Math.min(progress, 0.85) * 1.5 * activePhase}
+        />
       </mesh>
 
       {/* Core glow — dims in retreat */}

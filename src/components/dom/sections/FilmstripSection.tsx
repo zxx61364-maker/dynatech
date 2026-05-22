@@ -8,7 +8,7 @@ export function FilmstripSection() {
   const currentSection = useScrollStore((s) => s.currentSection);
   const { visible, opacity } = useDomVisibility('filmstrip');
 
-  if (currentSection !== 'filmstrip' && currentSection !== 'hero' && currentSection !== 'office') return null;
+  if (currentSection !== 'filmstrip') return null;
 
   return (
     <>

@@ -7,7 +7,7 @@ export function CTASection() {
   const currentSection = useScrollStore((s) => s.currentSection);
   const { visible, opacity } = useDomVisibility('cta');
 
-  if (currentSection !== 'cta' && currentSection !== 'client-wall' && currentSection !== 'finale') return null;
+  if (currentSection !== 'cta') return null;
 
   return (
     <>

@@ -7,7 +7,7 @@ export function PaperSection() {
   const currentSection = useScrollStore((s) => s.currentSection);
   const { visible, opacity } = useDomVisibility('paper');
 
-  if (currentSection !== 'paper' && currentSection !== 'office' && currentSection !== 'client-wall') return null;
+  if (currentSection !== 'paper') return null;
 
   return (
     <>

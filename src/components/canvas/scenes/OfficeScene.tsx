@@ -176,7 +176,7 @@ export function OfficeScene() {
       </mesh>
 
       {/* Dust particles in fluorescent light */}
-      {Array.from({ length: 25 }).map((_, i) => (
+      {Array.from({ length: 15 }).map((_, i) => (
         <mesh
           key={`office-dust-${i}`}
           position={[

@@ -45,7 +45,9 @@ function GoldenTieRelic({ progress }: { progress: number }) {
 
   useFrame((_, delta) => {
     if (tieRef.current) {
-      tieRef.current.rotation.y += delta * 0.15;
+      // Slow rotation at end for final-frame settle
+      const settleSlow = progress > 0.85 ? 1 - (progress - 0.85) / 0.15 * 0.7 : 1;
+      tieRef.current.rotation.y += delta * 0.15 * settleSlow;
       tieRef.current.position.y = 0.2 + Math.sin(Date.now() * 0.0008) * 0.03;
     }
     if (glowRef.current) {
@@ -128,22 +130,26 @@ export function FinaleScene() {
     <group>
       <ambientLight intensity={0.03} color={COLORS.BLACK_VOID} />
 
-      {/* Main dramatic spotlight — tightens as we arrive */}
+      {/* Main dramatic spotlight — tightens as we arrive, strong reveal */}
       <spotLight
-        position={[0, 5.5, 0.5]}
-        angle={0.35 - progress * 0.12}
-        penumbra={0.3 + progress * 0.4}
-        intensity={6 + progress * 12}
-        color="#fff8e0"
+        position={[0, 6, 0.5]}
+        angle={0.4 - progress * 0.15}
+        penumbra={0.25 + progress * 0.55}
+        intensity={5 + progress * 16}
+        color="#fffaf0"
         distance={14}
         castShadow
       />
 
       {/* Front gold fill — intensifies */}
-      <pointLight position={[0, 0.3, 3.5]} intensity={1 + progress * 3} color={COLORS.GOLDEN_ACCENT} distance={8} />
+      <pointLight position={[0, 0.3, 3.5]} intensity={1 + progress * 4} color={COLORS.GOLDEN_ACCENT} distance={8} />
 
-      {/* Back rim */}
-      <pointLight position={[0, 0.5, -2]} intensity={2 + progress * 2} color="#c08020" distance={7} />
+      {/* Back rim — stronger for silhouette */}
+      <pointLight position={[0, 0.5, -2]} intensity={2.5 + progress * 2.5} color="#c08020" distance={7} />
+
+      {/* Side rim catches on the tie edges */}
+      <pointLight position={[1.5, 0.3, 0.5]} intensity={0.3 + progress * 0.8} color="#ffe8d0" distance={4} />
+      <pointLight position={[-1.5, 0.3, 0.5]} intensity={0.3 + progress * 0.8} color="#ffe8d0" distance={4} />
 
       {/* Side warmth */}
       <pointLight position={[3, 0.1, 0]} intensity={0.3 + progress * 0.5} color="#331800" distance={6} />
@@ -155,24 +161,29 @@ export function FinaleScene() {
         <meshStandardMaterial color="#080808" roughness={0.4} metalness={0.3} />
       </mesh>
 
-      {/* Light pool on floor — tightens */}
-      <mesh position={[0, -0.69, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.2 - progress * 0.3, 48]} />
-        <meshBasicMaterial color="#1a1000" transparent opacity={0.08 + progress * 0.1} depthWrite={false} />
+      {/* Light pool on floor — widens slightly then tightens */}
+      <mesh position={[0, -0.71, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.0 - progress * 0.2, 48]} />
+        <meshBasicMaterial color="#1a1000" transparent opacity={0.06 + progress * 0.12} depthWrite={false} />
       </mesh>
 
-      {/* Pedestal */}
+      {/* Pedestal — 4-tier for gallery presence */}
       <mesh position={[0, -0.5, 0]} castShadow>
-        <cylinderGeometry args={[0.22, 0.26, 0.06, 32]} />
-        <meshStandardMaterial color="#1a1a1a" roughness={0.2} metalness={0.6} />
+        <cylinderGeometry args={[0.24, 0.28, 0.06, 32]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.15} metalness={0.65} />
       </mesh>
-      <mesh position={[0, -0.57, 0]}>
-        <cylinderGeometry args={[0.08, 0.14, 0.2, 20]} />
-        <meshStandardMaterial color="#181818" roughness={0.25} metalness={0.55} />
+      <mesh position={[0, -0.56, 0]}>
+        <cylinderGeometry args={[0.1, 0.16, 0.18, 20]} />
+        <meshStandardMaterial color="#1c1c1c" roughness={0.2} metalness={0.6} />
       </mesh>
-      <mesh position={[0, -0.65, 0]}>
-        <cylinderGeometry args={[0.28, 0.3, 0.06, 32]} />
-        <meshStandardMaterial color="#141414" roughness={0.2} metalness={0.6} />
+      <mesh position={[0, -0.64, 0]}>
+        <cylinderGeometry args={[0.3, 0.32, 0.06, 32]} />
+        <meshStandardMaterial color="#161616" roughness={0.15} metalness={0.65} />
+      </mesh>
+      {/* Widest base step */}
+      <mesh position={[0, -0.69, 0]}>
+        <cylinderGeometry args={[0.38, 0.4, 0.04, 32]} />
+        <meshStandardMaterial color="#121212" roughness={0.12} metalness={0.7} />
       </mesh>
 
       {/* God ray planes — fade in */}
@@ -190,27 +201,27 @@ export function FinaleScene() {
         <SettlingParticle key={`sp-${i}`} idx={i} total={PARTICLE_COUNT} progress={progress} />
       ))}
 
-      {/* Light haze */}
-      {Array.from({ length: 10 }).map((_, i) => (
+      {/* Light haze — reduced, subtle */}
+      {Array.from({ length: 5 }).map((_, i) => (
         <mesh
           key={`haze-${i}`}
           position={[
-            (Math.random() - 0.5) * 2 * (1 - progress * 0.7),
-            (Math.random() - 0.2) * 2 + 0.5,
-            (Math.random() - 0.5) * 2,
+            (Math.random() - 0.5) * 1.5 * (1 - progress * 0.7),
+            (Math.random() - 0.15) * 1.5 + 0.6,
+            (Math.random() - 0.5) * 1.5,
           ]}
         >
-          <sphereGeometry args={[0.02 + Math.random() * 0.05, 4, 4]} />
+          <sphereGeometry args={[0.02 + Math.random() * 0.04, 4, 4]} />
           <meshBasicMaterial
             color="#c8a040"
             transparent
-            opacity={0.015 + Math.random() * 0.03}
+            opacity={0.01 + Math.random() * 0.02}
             depthWrite={false}
           />
         </mesh>
       ))}
 
-      <fog attach="fog" args={[COLORS.BLACK_VOID, 1.0, 10 - progress * 2]} />
+      <fog attach="fog" args={[COLORS.BLACK_VOID, 0.8, 8 - progress * 2.5]} />
 
       <GoldenTieRelic progress={progress} />
     </group>

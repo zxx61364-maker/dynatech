@@ -437,10 +437,10 @@ html, body {
 .client-tag {
   position: absolute;
   font-family: var(--font-mono);
-  font-size: clamp(8px, 0.9vw, 11px);
-  color: rgba(201,168,76,0.35);
-  letter-spacing: 0.06em;
-  padding: 2px 6px;
+  font-size: clamp(7px, 0.75vw, 10px);
+  color: rgba(201,168,76,0.25);
+  letter-spacing: 0.04em;
+  padding: 1px 4px;
   border-bottom: 1px solid;
   white-space: nowrap;
   transform: translateY(-50%);
@@ -470,7 +470,7 @@ html, body {
 
 /* filmstrip → office: safelight wipe */
 .transition-safelight-wipe .transition-inner {
-  animation: safelightWipe 0.7s ease-in-out forwards;
+  animation: safelightWipe 0.5s ease-in-out forwards;
 }
 @keyframes safelightWipe {
   0% {
@@ -493,7 +493,7 @@ html, body {
 
 /* office → paper: paper roll up from bottom */
 .transition-paper-roll .transition-inner {
-  animation: paperRoll 0.7s ease-in-out forwards;
+  animation: paperRoll 0.5s ease-in-out forwards;
 }
 @keyframes paperRoll {
   0% {
@@ -512,7 +512,7 @@ html, body {
 
 /* paper → client-wall: gentle dim then reveal */
 .transition-dissolve .transition-inner {
-  animation: gentleDim 0.55s ease-in-out forwards;
+  animation: gentleDim 0.4s ease-in-out forwards;
   background: #000;
 }
 @keyframes gentleDim {
@@ -542,7 +542,7 @@ html, body {
 
 /* cta → finale: dark collapse → spotlight reveal */
 .transition-lights-out .transition-inner {
-  animation: darkCollapse 0.7s ease-in-out forwards;
+  animation: darkCollapse 0.5s ease-in-out forwards;
 }
 @keyframes darkCollapse {
   0% {

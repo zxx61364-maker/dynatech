@@ -303,7 +303,7 @@ export function HeroCRTScene() {
       ))}
 
       {/* === ATMOSPHERIC HAZE PARTICLES === */}
-      {Array.from({ length: 40 }).map((_, i) => (
+      {Array.from({ length: 25 }).map((_, i) => (
         <mesh
           key={`haze-${i}`}
           position={[

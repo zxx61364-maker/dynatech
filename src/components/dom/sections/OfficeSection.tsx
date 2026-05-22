@@ -7,7 +7,7 @@ export function OfficeSection() {
   const currentSection = useScrollStore((s) => s.currentSection);
   const { visible, opacity } = useDomVisibility('office');
 
-  if (currentSection !== 'office' && currentSection !== 'filmstrip' && currentSection !== 'paper') return null;
+  if (currentSection !== 'office') return null;
 
   return (
     <>

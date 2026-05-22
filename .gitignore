@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local visual testing / debug artifacts
+/accept-*.png
+/screenshot-*.png
+/test-*.png
+/test-v2-*.png
+/check-mounts.js
+/screenshot.js
+/test-visual.js
+/test-visual-v2.js
+/verify-dom.js
+/visual-acceptance.js

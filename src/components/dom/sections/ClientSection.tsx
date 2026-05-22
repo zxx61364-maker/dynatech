@@ -8,19 +8,19 @@ export function ClientSection() {
   const currentSection = useScrollStore((s) => s.currentSection);
   const { visible, opacity } = useDomVisibility('client-wall');
 
-  if (currentSection !== 'client-wall' && currentSection !== 'paper' && currentSection !== 'cta') return null;
+  if (currentSection !== 'client-wall') return null;
 
   return (
     <>
-      <div className="client-tags-overlay" style={{ opacity: visible ? opacity : 0 }}>
+      <div className="client-tags-overlay" style={{ opacity: visible ? opacity * 0.7 : 0 }}>
         {CLIENTS.map((c, i) => (
           <span
             key={c.id}
             className="client-tag"
             style={{
-              top: `${15 + (i % 4) * 18}%`,
-              left: i < 4 ? '8%' : '78%',
-              borderColor: c.color + '33',
+              top: `${12 + (i % 4) * 20}%`,
+              left: i < 4 ? '3%' : '85%',
+              borderColor: c.color + '22',
             }}
           >
             {c.name}

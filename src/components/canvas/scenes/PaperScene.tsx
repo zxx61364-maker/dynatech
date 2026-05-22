@@ -11,8 +11,8 @@ export function PaperScene() {
   const { camera } = useThree();
   const groupRef = useRef<THREE.Group>(null);
 
-  const startPos = useMemo(() => new THREE.Vector3(0, 0.7, 7.0), []);
-  const endPos = useMemo(() => new THREE.Vector3(0, 0.15, 4.2), []);
+  const startPos = useMemo(() => new THREE.Vector3(0, 0.6, 7.5), []);
+  const endPos = useMemo(() => new THREE.Vector3(0, 0.05, 3.8), []);
   const lookTarget = useMemo(() => new THREE.Vector3(0, -0.05, 0), []);
 
   useFrame(() => {
@@ -61,45 +61,50 @@ export function PaperScene() {
         <meshBasicMaterial color="#3a2820" transparent opacity={0.3} />
       </mesh>
 
-      {/* === PAPER SHEET — bright, clearly visible document === */}
-      <mesh position={[0, -0.05, 0.03]} rotation={[0.005, 0.005, 0.003]}>
+      {/* === PAPER SHEET — bright document with physical edge === */}
+      <mesh position={[0, -0.04, 0.03]} rotation={[0.005, 0.005, 0.003]}>
         <planeGeometry args={[6.5, 8.5]} />
         <meshStandardMaterial
-          color="#fdf9f0"
-          roughness={0.4}
+          color="#fefcf6"
+          roughness={0.35}
           metalness={0}
           transparent
-          opacity={0.55}
+          opacity={0.6}
         />
       </mesh>
+      {/* Paper edge thickness */}
+      <mesh position={[0, -0.05, 0.03]}>
+        <boxGeometry args={[6.55, 8.55, 0.012]} />
+        <meshStandardMaterial color="#e8e0cc" roughness={0.3} metalness={0} />
+      </mesh>
 
-      {/* Paper drop shadow — more defined */}
-      <mesh position={[0.05, -0.08, 0.01]}>
-        <planeGeometry args={[6.8, 8.8]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.14} depthWrite={false} />
+      {/* Paper drop shadow */}
+      <mesh position={[0.06, -0.1, 0.005]}>
+        <planeGeometry args={[7.0, 9.0]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.16} depthWrite={false} />
       </mesh>
 
       {/* === DESK PROPS === */}
-      {/* Gold fountain pen */}
-      <mesh position={[2.3, 0.0, -2.5]} rotation={[0, 0, 0.35]}>
-        <cylinderGeometry args={[0.025, 0.025, 0.6, 8]} />
-        <meshStandardMaterial color={COLORS.GOLDEN_ACCENT} roughness={0.15} metalness={0.96} />
+      {/* Gold fountain pen — brighter, angled across corner */}
+      <mesh position={[2.3, 0.01, -2.5]} rotation={[0, 0, 0.35]}>
+        <cylinderGeometry args={[0.028, 0.028, 0.6, 8]} />
+        <meshStandardMaterial color="#d4b040" roughness={0.1} metalness={0.97} />
       </mesh>
 
-      {/* Red wax seal stamp */}
-      <mesh position={[-2.3, -0.03, -2.3]} rotation={[0, 0, 0.1]}>
-        <cylinderGeometry args={[0.14, 0.14, 0.04, 20]} />
-        <meshStandardMaterial color={COLORS.RED_ACCENT} roughness={0.25} metalness={0.15} />
+      {/* Red wax seal stamp — richer red */}
+      <mesh position={[-2.3, -0.02, -2.3]} rotation={[0, 0, 0.1]}>
+        <cylinderGeometry args={[0.15, 0.15, 0.045, 20]} />
+        <meshStandardMaterial color="#bb2222" roughness={0.2} metalness={0.15} />
       </mesh>
-      <mesh position={[-2.3, 0.0, -2.3]}>
+      <mesh position={[-2.3, 0.01, -2.3]}>
         <cylinderGeometry args={[0.06, 0.08, 0.1, 12]} />
         <meshStandardMaterial color="#8a6642" roughness={0.4} metalness={0.3} />
       </mesh>
 
-      {/* Brass paperweight */}
-      <mesh position={[2.1, -0.01, 1.8]}>
-        <cylinderGeometry args={[0.12, 0.15, 0.07, 20]} />
-        <meshStandardMaterial color="#4a3a2a" roughness={0.25} metalness={0.7} />
+      {/* Brass paperweight — more metallic */}
+      <mesh position={[2.1, 0.0, 1.8]}>
+        <cylinderGeometry args={[0.13, 0.16, 0.08, 20]} />
+        <meshStandardMaterial color="#5a4a32" roughness={0.2} metalness={0.75} />
       </mesh>
 
       {/* === DUST MOTES === */}
